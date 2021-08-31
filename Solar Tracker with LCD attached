@@ -1,0 +1,78 @@
+#include <LiquidCrystal.h> 
+#include <Servo.h>
+
+Servo servo1;//Horizontal Servo Motor
+Servo servo2;// Vertical Servo Motor
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+void setup() {
+  
+  lcd.begin(16,2); 
+  lcd.print("Horizontal "); 
+  lcd.setCursor(0,1);
+  lcd.print("Vertical ");
+  servo1.attach(9);
+  servo2.attach(10); 
+  
+  servo1.write(90); 
+  servo2.write(90); 
+}
+
+void loop(){
+  
+ int sensorTop = analogRead(A0);
+ int sensorBottom = analogRead(A1);
+ int sensorLeft = analogRead(A3);
+ int sensorRight = analogRead(A4);
+
+ int avgT=(sensorTop+sensorBottom)/2;
+ int avgB=(sensorLeft+sensorRight)/2;
+ int avgL=(sensorTop+sensorLeft)/2;
+ int avgR=(sensorBottom+sensorRight)/2;
+
+
+  if (avgT > avgB)
+  {
+  	 UpDown(sensorTop, sensorBottom);
+  }
+  if(avgT < avgB)
+  {
+    UpDown(sensorTop, sensorBottom);
+  }
+  if(avgL > avgR) 
+ 	{
+ 	 LeftRight(sensorLeft, sensorRight);
+    }
+  if(avgL < avgR) 
+ 	{
+ 	 LeftRight(sensorLeft, sensorRight);
+    }
+ delay(10); 
+}
+void UpDown(int avgT, int avgB){
+  int pos1= servo1.read();
+    
+  if(avgT < avgB){
+     pos1 = --pos1; 
+    }
+  	 else
+     {
+      pos1 = ++pos1;
+     }
+  servo1.write(pos1);
+   lcd.setCursor(12,0);
+ lcd.print(pos1);
+ }
+void LeftRight(int avgL, int avgR){
+  int pos2= servo2.read();
+  if(avgL < avgR)
+   { 
+    pos2 = --pos2;
+   }
+  	else
+    {
+     pos2 = pos2 + 1;
+    }
+  servo2.write(pos2);
+  lcd.setCursor(12,1);
+ lcd.print(pos2);
+}
