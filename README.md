@@ -1,1 +1,1 @@
-# Arduino-code-of-my-old-projects
+A collection of my Arduino projects
